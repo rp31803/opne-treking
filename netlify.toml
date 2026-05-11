@@ -1,28 +1,63 @@
+redirectsOrigin = "config"
+plugins = []
+headers = []
+
+[functions]
+
+  [functions."*"]
+
 [build]
-  publish = "build"
-  command = "echo 'Static site ready - no build needed'"
+publish = "/opt/build/repo/build"
+publishOrigin = "config"
+commandOrigin = "config"
+command = "mkdir -p build"
 
-[build.environment]
-  # No Python environment needed for static site
+  [build.environment]
 
-# Static site redirects
-[[redirects]]
-  from = "/api/*"
-  to = "/index.html"
-  status = 200
+  [build.processing]
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+    [build.processing.css]
 
-# Redirect rules for SPA
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+    [build.processing.html]
+
+    [build.processing.images]
+
+    [build.processing.js]
+
+  [build.services]
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+from = "/api/*"
+to = "/index.html"
+status = 200
+force = false
+
+  [redirects.query]
+
+  [redirects.conditions]
+
+  [redirects.headers]
+
+[[redirects]]
+from = "/api/*"
+to = "/.netlify/functions/:splat"
+status = 200
+force = false
+
+  [redirects.query]
+
+  [redirects.conditions]
+
+  [redirects.headers]
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+force = false
+
+  [redirects.query]
+
+  [redirects.conditions]
+
+  [redirects.headers]
