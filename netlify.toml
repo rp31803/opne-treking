@@ -1,14 +1,14 @@
 [build]
   publish = "build"
-  command = "pip install -r requirements.txt && echo 'Dependencies installed. Note: Full Streamlit functionality requires Streamlit Cloud.'"
+  command = "echo 'Static site ready - no build needed'"
 
 [build.environment]
-  PYTHON_VERSION = "3.11"
+  # No Python environment needed for static site
 
-# For static site deployment
+# Static site redirects
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  to = "/index.html"
   status = 200
 
 [[redirects]]
