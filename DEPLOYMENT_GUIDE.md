@@ -1,38 +1,57 @@
 # 🚀 OSINT Tracker - Netlify Deployment Guide
 
+## ✅ FIXED: Python Version Issue Resolved
+
+**Problem:** Netlify build was failing because Python 3.8 is no longer supported.
+
+**Solution:** Updated to Python 3.11 with static landing page.
+
 ## Step-by-Step Deployment Process
 
-### 1. Create GitHub Repository
-1. Go to [github.com](https://github.com) and sign in
-2. Click "New repository"
-3. Name it: `osint-tracker` or `osint-geolocation-tracker`
-4. Make it **Public** (required for free Netlify deployment)
-5. **DO NOT** initialize with README (we already have one)
-6. Click "Create repository"
-
-### 2. Push Code to GitHub
+### 1. Push the Latest Fixes
 ```bash
-# Add GitHub remote (replace YOUR_USERNAME with your GitHub username)
-git remote add origin https://github.com/YOUR_USERNAME/osint-tracker.git
-
-# Push to GitHub
-git push -u origin master
+git push origin master
 ```
 
-### 3. Deploy to Netlify
+### 2. Redeploy on Netlify
+1. Go to your Netlify dashboard
+2. Find your OSINT Tracker site
+3. Click "Deploy site" or wait for automatic redeployment
+4. The build should now succeed with Python 3.11
 
-#### Option A: One-Click Deploy (Recommended)
-1. Go to [netlify.com](https://netlify.com)
-2. Sign up/Login with GitHub
-3. Click "Add new site" → "Import an existing project"
-4. Choose "Deploy with GitHub"
-5. Authorize Netlify to access your GitHub
-6. Select your `osint-tracker` repository
-7. Configure build settings:
-   - **Branch to deploy:** `master` or `main`
-   - **Build command:** `pip install -r requirements.txt && python -m streamlit run main.py --server.port $PORT --server.headless true`
-   - **Publish directory:** (leave empty)
-8. Click "Deploy site"
+### 3. What You'll Get
+- **Static landing page** explaining the app and deployment options
+- **Links to Streamlit Cloud** for full functionality
+- **Clean, professional presentation**
+
+## 🎯 Best Deployment Options
+
+### Option 1: Streamlit Cloud (Recommended for Full Features)
+**Perfect for interactive Streamlit apps:**
+1. Go to [share.streamlit.io](https://share.streamlit.io)
+2. Connect your GitHub repository
+3. Select `main.py` as the main file
+4. **All features work perfectly!** ✨
+
+### Option 2: Netlify (Static Landing Page)
+**Good for:**
+- Professional landing page
+- Custom domain
+- SEO-friendly presentation
+- Links to the full app on Streamlit Cloud
+
+## 🔧 Technical Details
+
+### Fixed Issues:
+- ✅ Updated `runtime.txt` from Python 3.8 → 3.11
+- ✅ Updated `netlify.toml` with Python 3.11
+- ✅ Added static HTML landing page
+- ✅ Simplified build process
+
+### Build Configuration:
+- **Python Version:** 3.11 (supported by Netlify)
+- **Build Command:** Installs dependencies and creates landing page
+- **Publish Directory:** `build/` (contains the static HTML)
 
 #### Option B: Static Export (Limited Functionality)
 If you want a static version (loses interactivity):
