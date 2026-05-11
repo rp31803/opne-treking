@@ -1,0 +1,14 @@
+# Streamlit Cloud Deployment Configuration
+
+# This file tells Streamlit Cloud how to run your app
+# Place this in your GitHub repository root
+
+[server]
+headless = true
+port = 8501
+
+[theme]
+base = "light"
+primaryColor = "#FF4B4B"
+
+# Add any custom configuration here

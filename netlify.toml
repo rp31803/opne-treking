@@ -1,0 +1,21 @@
+[build]
+  publish = "build"
+  command = "echo 'Static export not available for full Streamlit functionality'"
+
+[build.environment]
+  PYTHON_VERSION = "3.8"
+
+# For serverless functions (advanced deployment)
+[functions]
+  directory = "netlify/functions"
+
+# Redirect rules for SPA
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

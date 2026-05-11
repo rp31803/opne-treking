@@ -1,0 +1,14 @@
+{
+  "name": "osint-tracker-netlify",
+  "version": "1.0.0",
+  "description": "OSINT Geolocation & Phone Tracker deployed on Netlify",
+  "scripts": {
+    "build": "echo 'Building for Netlify deployment'",
+    "start": "streamlit run main.py"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": ["osint", "streamlit", "netlify", "geolocation", "phone-tracker"],
+  "author": "OSINT Tracker",
+  "license": "MIT"
+}
