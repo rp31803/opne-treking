@@ -1,13 +1,20 @@
 [build]
   publish = "build"
-  command = "echo 'Static export not available for full Streamlit functionality'"
+  command = "pip install -r requirements.txt && echo 'Dependencies installed. Note: Full Streamlit functionality requires Streamlit Cloud.'"
 
 [build.environment]
-  PYTHON_VERSION = "3.8"
+  PYTHON_VERSION = "3.11"
 
-# For serverless functions (advanced deployment)
-[functions]
-  directory = "netlify/functions"
+# For static site deployment
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 # Redirect rules for SPA
 [[redirects]]
