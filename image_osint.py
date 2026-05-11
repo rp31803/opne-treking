@@ -170,6 +170,10 @@ def analyze_image_authenticity(image_file):
         original = Image.open(image_file)
         image_file.seek(0)  # Reset file pointer
 
+        # Convert to RGB if necessary (for JPEG compression analysis)
+        if original.mode not in ('RGB', 'L'):
+            original = original.convert('RGB')
+
         # Save at different quality levels to detect compression artifacts
         temp_buffer_high = io.BytesIO()
         temp_buffer_low = io.BytesIO()
@@ -278,24 +282,43 @@ def analyze_pdf_authenticity(pdf_file):
             'classification': 'UNKNOWN'
         }
 
-        # Check for digital signatures
+        # Check for digital signatures (simplified approach)
         try:
             signatures = []
             for page_num in range(len(pdf_reader.pages)):
                 page = pdf_reader.pages[page_num]
+                # Check for signature fields in AcroForm
                 if '/Annots' in page:
-                    annotations = page['/Annots']
-                    if hasattr(annotations, 'get_object'):
-                        annotations = annotations.get_object()
-                    for annot in annotations:
-                        if hasattr(annot, 'get_object'):
-                            annot = annot.get_object()
-                        if annot.get('/Subtype') == '/Widget' and '/FT' in annot:
-                            if annot['/FT'] == '/Sig':
-                                signatures.append(f"Signature on page {page_num + 1}")
+                    try:
+                        annotations = page['/Annots']
+                        # Handle both direct arrays and indirect references
+                        if hasattr(annotations, 'get_object'):
+                            annotations = annotations.get_object()
+
+                        # If annotations is a list/array
+                        if isinstance(annotations, list):
+                            for annot_ref in annotations:
+                                try:
+                                    if hasattr(annot_ref, 'get_object'):
+                                        annot = annot_ref.get_object()
+                                    else:
+                                        annot = annot_ref
+
+                                    # Check if this is a signature widget
+                                    if isinstance(annot, dict):
+                                        subtype = annot.get('/Subtype')
+                                        ft = annot.get('/FT')
+                                        if subtype == '/Widget' and ft == '/Sig':
+                                            signatures.append(f"Signature field on page {page_num + 1}")
+                                except:
+                                    continue
+                    except:
+                        pass
+
             result['digital_signatures'] = signatures
-        except:
-            pass
+        except Exception as e:
+            # If signature detection fails, just continue without signatures
+            result['digital_signatures'] = []
 
         # Check metadata consistency
         metadata = pdf_reader.metadata
@@ -306,14 +329,31 @@ def analyze_pdf_authenticity(pdf_file):
             # Check if modification date is after creation date
             if creation_date and mod_date:
                 try:
-                    # Simple date comparison (this could be improved)
-                    if mod_date < creation_date:
-                        result['metadata_consistency'] = 'INCONSISTENT'
-                        result['suspicious_elements'].append('Modification date is before creation date')
+                    # PDF dates are in format: D:YYYYMMDDHHMMSS or D:YYYYMMDDHHMMSS+HH'MM'
+                    # Extract just the date part for comparison
+                    def extract_date(date_str):
+                        if isinstance(date_str, str) and date_str.startswith('D:'):
+                            # Extract YYYYMMDD part
+                            date_part = date_str[2:10]
+                            if len(date_part) == 8 and date_part.isdigit():
+                                return date_part
+                        return None
+
+                    creation_date_clean = extract_date(str(creation_date))
+                    mod_date_clean = extract_date(str(mod_date))
+
+                    if creation_date_clean and mod_date_clean:
+                        if mod_date_clean < creation_date_clean:
+                            result['metadata_consistency'] = 'INCONSISTENT'
+                            result['suspicious_elements'].append('Modification date is before creation date')
+                        else:
+                            result['metadata_consistency'] = 'CONSISTENT'
                     else:
-                        result['metadata_consistency'] = 'CONSISTENT'
+                        result['metadata_consistency'] = 'UNKNOWN'
                 except:
                     result['metadata_consistency'] = 'UNKNOWN'
+            else:
+                result['metadata_consistency'] = 'UNKNOWN'
 
         # Check for JavaScript (potential security risk)
         try:
