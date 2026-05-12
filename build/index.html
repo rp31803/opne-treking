@@ -1,169 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSINT Geolocation & Phone Tracker</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.6;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            min-height: 100vh;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-        }
-        .warning {
-            background: rgba(255, 193, 7, 0.2);
-            border: 1px solid #ffc107;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 20px 0;
-        }
-        .success {
-            background: rgba(40, 167, 69, 0.2);
-            border: 1px solid #28a745;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 20px 0;
-        }
-        .button {
-            display: inline-block;
-            background: #007bff;
-            color: white;
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 5px;
-            margin: 10px 5px;
-            transition: background 0.3s;
-        }
-        .button:hover {
-            background: #0056b3;
-        }
-        .button.secondary {
-            background: #6c757d;
-        }
-        .button.secondary:hover {
-            background: #545b62;
-        }
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        .feature {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .feature h3 {
-            margin-top: 0;
-            color: #ffd700;
-        }
-    </style>
-    <script>
-        function showLocalInstructions() {
-            const instructions = document.getElementById('localInstructions');
-            if (instructions.style.display === 'none' || instructions.style.display === '') {
-                instructions.style.display = 'block';
-            } else {
-                instructions.style.display = 'none';
-            }
-        }
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OSINT Toolkit</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      text-align: center;
+      padding: 2.5rem 3rem;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      max-width: 480px;
+    }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    p { color: #94a3b8; line-height: 1.6; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🕵️ OSINT Geolocation & Phone Tracker</h1>
-
-        <div class="warning">
-            <strong>⚠️ Deployment Note:</strong> This is a Streamlit application that requires server-side Python execution. Netlify primarily hosts static websites, so full functionality is available on Streamlit Cloud instead.
-        </div>
-
-        <div class="success">
-            <strong>✅ Recommended:</strong> Use Streamlit Cloud for the complete interactive experience with all features working perfectly.
-        </div>
-
-        <div class="warning">
-            <strong>💡 Alternative:</strong> Run locally on your machine for full functionality.
-        </div>
-
-        <div style="text-align: center; margin: 30px 0;">
-            <a href="https://share.streamlit.io" class="button" target="_blank">
-                🚀 Deploy on Streamlit Cloud (Recommended)
-            </a>
-            <a href="https://github.com/rp31803/opne-treking" class="button secondary" target="_blank">
-                📖 View Source Code
-            </a>
-            <button class="button" onclick="showLocalInstructions()" style="background: #17a2b8;">
-                💻 Run Locally
-            </button>
-        </div>
-
-        <div id="localInstructions" style="display: none; background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3>🖥️ How to Run Locally</h3>
-            <ol style="text-align: left; max-width: 600px; margin: 0 auto;">
-                <li><strong>Install Python 3.8+</strong> from <a href="https://python.org" target="_blank" style="color: #ffd700;">python.org</a></li>
-                <li><strong>Clone the repository:</strong><br>
-                    <code style="background: rgba(0,0,0,0.3); padding: 5px; border-radius: 3px; display: block; margin: 5px 0;">git clone https://github.com/rp31803/opne-treking.git</code></li>
-                <li><strong>Install dependencies:</strong><br>
-                    <code style="background: rgba(0,0,0,0.3); padding: 5px; border-radius: 3px; display: block; margin: 5px 0;">cd osint-tracker && pip install -r requirements.txt</code></li>
-                <li><strong>Run the application:</strong><br>
-                    <code style="background: rgba(0,0,0,0.3); padding: 5px; border-radius: 3px; display: block; margin: 5px 0;">streamlit run main.py</code></li>
-                <li><strong>Open your browser</strong> to <code style="background: rgba(0,0,0,0.3); padding: 5px; border-radius: 3px;">http://localhost:8501</code></li>
-            </ol>
-        </div>
-
-        <h2>🎯 Features</h2>
-        <div class="features">
-            <div class="feature">
-                <h3>📸 Image Analysis</h3>
-                <p>Extract EXIF metadata, GPS coordinates, and timestamps from images</p>
-            </div>
-            <div class="feature">
-                <h3>📄 PDF Analysis</h3>
-                <p>Analyze PDF documents for text content, metadata, and intelligence</p>
-            </div>
-            <div class="feature">
-                <h3>📱 Phone Tracker</h3>
-                <p>Validate phone numbers and extract carrier information globally</p>
-            </div>
-            <div class="feature">
-                <h3>🔍 Authenticity Check</h3>
-                <p>Detect image manipulation and PDF tampering using advanced algorithms</p>
-            </div>
-        </div>
-
-        <h2>📋 How to Deploy</h2>
-        <ol>
-            <li><strong>Fork the repository</strong> on GitHub</li>
-            <li><strong>Go to <a href="https://share.streamlit.io" target="_blank" style="color: #ffd700;">share.streamlit.io</a></strong></li>
-            <li><strong>Connect your GitHub</strong> and select this repository</li>
-            <li><strong>Choose <code>main.py</code></strong> as the main file</li>
-            <li><strong>Click Deploy!</strong> ✨</li>
-        </ol>
-
-        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
-            <p style="text-align: center; opacity: 0.8;">
-                Built with ❤️ using Python, Streamlit, and open-source intelligence techniques
-            </p>
-        </div>
-    </div>
+  <div class="card">
+    <h1>OSINT Toolkit</h1>
+    <p>This site is live and deployed successfully.</p>
+  </div>
 </body>
 </html>
