@@ -7,8 +7,8 @@ headers = []
   [functions."*"]
 
 [build]
-publish = "build"
-command = "echo 'Build complete - publishing from build directory'"
+publish = "."
+command = "echo 'Deploying root directory'"
 
   [build.environment]
 
