@@ -3,33 +3,584 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OSINT Toolkit</title>
+  <title>OSINT Toolkit - Open Source Intelligence Tools</title>
+  <meta name="description" content="Professional OSINT toolkit for digital investigations, image analysis, phone tracking, and document analysis.">
   <style>
-    body {
+    * {
       margin: 0;
-      font-family: system-ui, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f8f9fa;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #ffd700;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+
+    nav ul li {
+      margin-left: 2rem;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #ffd700;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      padding: 100px 0;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    .btn {
+      display: inline-block;
+      background: #ffd700;
+      color: #333;
+      padding: 12px 30px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: all 0.3s;
+      margin: 0 10px;
+    }
+
+    .btn:hover {
+      background: #ffed4e;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255,215,0,0.3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid white;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: white;
+      color: #333;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 80px 0;
+      background: white;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 3rem;
+      color: #2a5298;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #ffd700;
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #2a5298;
+    }
+
+    /* About Section */
+    .about {
+      padding: 80px 0;
+      background: #f8f9fa;
+    }
+
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .about h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      color: #2a5298;
+    }
+
+    .about-text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+
+    .about-image {
+      text-align: center;
+    }
+
+    .about-image img {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    /* Tools Section */
+    .tools {
+      padding: 80px 0;
+      background: white;
+    }
+
+    .tools h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 3rem;
+      color: #2a5298;
+    }
+
+    .tool-item {
       display: flex;
       align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      transition: all 0.3s;
     }
-    .card {
+
+    .tool-item:hover {
+      background: #e9ecef;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .tool-icon {
+      font-size: 2rem;
+      margin-right: 1.5rem;
+      color: #ffd700;
+      min-width: 50px;
+    }
+
+    .tool-content h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: #2a5298;
+    }
+
+    .tool-content p {
+      color: #666;
+    }
+
+    /* CTA Section */
+    .cta {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      padding: 80px 0;
       text-align: center;
-      padding: 2.5rem 3rem;
-      border: 1px solid #334155;
-      border-radius: 12px;
-      max-width: 480px;
     }
-    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-    p { color: #94a3b8; line-height: 1.6; }
+
+    .cta h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .cta p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Footer */
+    footer {
+      background: #2a5298;
+      color: white;
+      padding: 40px 0;
+      text-align: center;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-section h3 {
+      margin-bottom: 1rem;
+      color: #ffd700;
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-section ul li a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-section ul li a:hover {
+      color: #ffd700;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 2rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      nav {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      nav ul {
+        margin-top: 1rem;
+      }
+
+      .about-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>OSINT Toolkit</h1>
-    <p>This site is live and deployed successfully.</p>
-  </div>
+  <!-- Header -->
+  <header>
+    <nav class="container">
+      <div class="logo">🕵️ OSINT<span>Toolkit</span></div>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#tools">Tools</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="container">
+      <h1>Open Source Intelligence Toolkit</h1>
+      <p>Professional digital investigation tools for image analysis, phone tracking, and document intelligence. Empowering investigators with cutting-edge OSINT technology.</p>
+      <div>
+        <a href="#tools" class="btn">Explore Tools</a>
+        <a href="#contact" class="btn btn-secondary">Get Started</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="container">
+      <h2>Powerful OSINT Capabilities</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📸</div>
+          <h3>Image Analysis</h3>
+          <p>Extract EXIF metadata, GPS coordinates, and timestamps from images. Advanced authenticity detection using Error Level Analysis.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Phone Intelligence</h3>
+          <p>Validate phone numbers globally, identify carriers, regions, and line types. Comprehensive phone number analysis.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📄</div>
+          <h3>Document Analysis</h3>
+          <p>Extract text, metadata, and intelligence from PDF documents. Automatic detection of emails, URLs, and phone numbers.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Authenticity Verification</h3>
+          <p>Detect image manipulation and PDF tampering using advanced forensic analysis techniques.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🗺️</div>
+          <h3>Location Intelligence</h3>
+          <p>Reverse geocoding, interactive maps, and location-based analysis for comprehensive geospatial intelligence.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Privacy Focused</h3>
+          <p>Open source, ethical OSINT tools designed for responsible digital investigations and research.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-content">
+        <div>
+          <h2>About OSINT Toolkit</h2>
+          <div class="about-text">
+            <p>The OSINT Toolkit is a comprehensive suite of open-source intelligence tools designed for digital investigators, researchers, and security professionals. Our mission is to provide accessible, powerful tools for ethical digital investigations.</p>
+            <p>Built with Python and modern web technologies, our toolkit offers advanced capabilities for image forensics, phone number analysis, document intelligence, and location-based investigations.</p>
+            <p>We believe in transparency, security, and responsible use of technology. All our tools are open source and designed to protect user privacy while enabling thorough investigations.</p>
+          </div>
+        </div>
+        <div class="about-image">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Digital Investigation Tools" style="max-width: 400px;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools Section -->
+  <section class="tools" id="tools">
+    <div class="container">
+      <h2>Available Tools</h2>
+
+      <div class="tool-item">
+        <div class="tool-icon">📸</div>
+        <div class="tool-content">
+          <h3>Image EXIF Analyzer</h3>
+          <p>Extract GPS coordinates, timestamps, camera information, and metadata from digital images. Supports JPG, PNG, TIFF, and BMP formats.</p>
+        </div>
+      </div>
+
+      <div class="tool-item">
+        <div class="tool-icon">📱</div>
+        <div class="tool-content">
+          <h3>Phone Number Validator</h3>
+          <p>Validate phone numbers worldwide, identify carriers, regions, timezones, and line types using comprehensive phone number databases.</p>
+        </div>
+      </div>
+
+      <div class="tool-item">
+        <div class="tool-icon">📄</div>
+        <div class="tool-content">
+          <h3>PDF Document Analyzer</h3>
+          <p>Extract text content, metadata, embedded images, and automatically detect emails, URLs, and phone numbers within PDF documents.</p>
+        </div>
+      </div>
+
+      <div class="tool-item">
+        <div class="tool-icon">🔍</div>
+        <div class="tool-content">
+          <h3>Image Authenticity Checker</h3>
+          <p>Use Error Level Analysis (ELA) to detect image manipulation, compression artifacts, and potential tampering.</p>
+        </div>
+      </div>
+
+      <div class="tool-item">
+        <div class="tool-icon">🗺️</div>
+        <div class="tool-content">
+          <h3>GPS Location Mapper</h3>
+          <p>Convert GPS coordinates to human-readable addresses and display interactive maps for location-based intelligence.</p>
+        </div>
+      </div>
+
+      <div class="tool-item">
+        <div class="tool-icon">🔒</div>
+        <div class="tool-content">
+          <h3>Document Integrity Scanner</h3>
+          <p>Check PDF files for digital signatures, metadata consistency, and potential security vulnerabilities.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta" id="contact">
+    <div class="container">
+      <h2>Ready to Start Investigating?</h2>
+      <p>Join thousands of investigators using OSINT Toolkit for ethical digital investigations. Access powerful tools with a single click.</p>
+      <div>
+        <a href="https://share.streamlit.io" class="btn" target="_blank">Launch Full Application</a>
+        <a href="https://github.com/rp31803/opne-treking" class="btn btn-secondary" target="_blank">View Source Code</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>🕵️ OSINT Toolkit</h3>
+          <p>Professional open-source intelligence tools for digital investigations and research.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#tools">Tools</a></li>
+            <li><a href="#about">About</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="https://github.com/rp31803/opne-treking" target="_blank">GitHub Repository</a></li>
+            <li><a href="https://share.streamlit.io" target="_blank">Streamlit Cloud</a></li>
+            <li><a href="https://python.org" target="_blank">Python</a></li>
+            <li><a href="https://streamlit.io" target="_blank">Streamlit</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Legal</h3>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Use</a></li>
+            <li><a href="#">Ethical Guidelines</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 OSINT Toolkit. Built with ❤️ for ethical digital investigations. All rights reserved.</p>
+        <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+          This site is live and deployed successfully on Netlify.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('nav ul li a').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          targetSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Add some interactive effects
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe feature cards
+    document.querySelectorAll('.feature-card').forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(card);
+    });
+
+    // Observe tool items
+    document.querySelectorAll('.tool-item').forEach(item => {
+      item.style.opacity = '0';
+      item.style.transform = 'translateY(20px)';
+      item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(item);
+    });
+  </script>
 </body>
 </html>
