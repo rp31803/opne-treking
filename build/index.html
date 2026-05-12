@@ -77,6 +77,16 @@
             color: #ffd700;
         }
     </style>
+    <script>
+        function showLocalInstructions() {
+            const instructions = document.getElementById('localInstructions');
+            if (instructions.style.display === 'none' || instructions.style.display === '') {
+                instructions.style.display = 'block';
+            } else {
+                instructions.style.display = 'none';
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -90,13 +100,34 @@
             <strong>✅ Recommended:</strong> Use Streamlit Cloud for the complete interactive experience with all features working perfectly.
         </div>
 
+        <div class="warning">
+            <strong>💡 Alternative:</strong> Run locally on your machine for full functionality.
+        </div>
+
         <div style="text-align: center; margin: 30px 0;">
             <a href="https://share.streamlit.io" class="button" target="_blank">
                 🚀 Deploy on Streamlit Cloud (Recommended)
             </a>
-            <a href="https://github.com/YOUR_USERNAME/osint-tracker" class="button secondary" target="_blank">
+            <a href="https://github.com/rp31803/opne-treking" class="button secondary" target="_blank">
                 📖 View Source Code
             </a>
+            <button class="button" onclick="showLocalInstructions()" style="background: #17a2b8;">
+                💻 Run Locally
+            </button>
+        </div>
+
+        <div id="localInstructions" style="display: none; background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3>🖥️ How to Run Locally</h3>
+            <ol style="text-align: left; max-width: 600px; margin: 0 auto;">
+                <li><strong>Install Python 3.8+</strong> from <a href="https://python.org" target="_blank" style="color: #ffd700;">python.org</a></li>
+                <li><strong>Clone the repository:</strong><br>
+                    <code style="background: rgba(0,0,0,0.3); padding: 5px; border-radius: 3px; display: block; margin: 5px 0;">git clone https://github.com/rp31803/opne-treking.git</code></li>
+                <li><strong>Install dependencies:</strong><br>
+                    <code style="background: rgba(0,0,0,0.3); padding: 5px; border-radius: 3px; display: block; margin: 5px 0;">cd osint-tracker && pip install -r requirements.txt</code></li>
+                <li><strong>Run the application:</strong><br>
+                    <code style="background: rgba(0,0,0,0.3); padding: 5px; border-radius: 3px; display: block; margin: 5px 0;">streamlit run main.py</code></li>
+                <li><strong>Open your browser</strong> to <code style="background: rgba(0,0,0,0.3); padding: 5px; border-radius: 3px;">http://localhost:8501</code></li>
+            </ol>
         </div>
 
         <h2>🎯 Features</h2>
