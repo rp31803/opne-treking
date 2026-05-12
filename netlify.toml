@@ -7,10 +7,8 @@ headers = []
   [functions."*"]
 
 [build]
-publish = "/opt/build/repo/build"
-publishOrigin = "config"
-commandOrigin = "config"
-command = "mkdir -p build"
+publish = "build"
+command = "echo 'Build complete - publishing from build directory'"
 
   [build.environment]
 
