@@ -4,6 +4,9 @@ exifread
 phonenumbers
 geopy
 folium
+streamlit-folium
 pypdf
 pdfplumber
 pdf2image
+numpy
+scipy

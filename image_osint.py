@@ -11,7 +11,6 @@ from geopy.geocoders import Nominatim
 import folium
 from streamlit_folium import folium_static
 import numpy as np
-from scipy import ndimage
 import hashlib
 
 def extract_image_data(image_file):
@@ -60,32 +59,56 @@ def extract_image_data(image_file):
 
             result['gps_available'] = True
 
-            # Convert GPS coordinates to decimal degrees
-            lat_dms = str(tags['GPS GPSLatitude']).replace('[', '').replace(']', '').split(',')
-            lon_dms = str(tags['GPS GPSLongitude']).replace('[', '').replace(']', '').split(',')
+            try:
+                # Get GPS values - exifread returns them as strings or processed values
+                lat_value = tags['GPS GPSLatitude']
+                lon_value = tags['GPS GPSLongitude']
 
-            if len(lat_dms) >= 3 and len(lon_dms) >= 3:
-                # Parse degrees, minutes, seconds
-                lat_deg = float(lat_dms[0])
-                lat_min = float(lat_dms[1])
-                lat_sec = float(lat_dms[2].split('/')[0]) / float(lat_dms[2].split('/')[1]) if '/' in lat_dms[2] else float(lat_dms[2])
+                # Function to convert DMS to decimal degrees
+                def dms_to_decimal(dms):
+                    """Convert degrees, minutes, seconds to decimal degrees"""
+                    if isinstance(dms, str):
+                        # Handle string format like "[37, 47, 1234/5678]"
+                        dms_str = dms.replace('[', '').replace(']', '').replace(' ', '')
+                        parts = dms_str.split(',')
+                        if len(parts) >= 3:
+                            deg = float(parts[0])
+                            min_val = float(parts[1])
+                            sec_str = parts[2]
+                            # Handle rational numbers like "1234/5678"
+                            if '/' in sec_str:
+                                sec_num, sec_den = sec_str.split('/')
+                                sec = float(sec_num) / float(sec_den)
+                            else:
+                                sec = float(sec_str)
+                            return deg + (min_val / 60.0) + (sec / 3600.0)
+                    elif hasattr(dms, '__len__') and len(dms) >= 3:
+                        # Handle tuple/list format
+                        deg = float(dms[0])
+                        min_val = float(dms[1])
+                        sec = float(dms[2])
+                        return deg + (min_val / 60.0) + (sec / 3600.0)
+                    return None
 
-                lon_deg = float(lon_dms[0])
-                lon_min = float(lon_dms[1])
-                lon_sec = float(lon_dms[2].split('/')[0]) / float(lon_dms[2].split('/')[1]) if '/' in lon_dms[2] else float(lon_dms[2])
+                latitude = dms_to_decimal(lat_value)
+                longitude = dms_to_decimal(lon_value)
 
-                # Convert to decimal degrees
-                latitude = lat_deg + (lat_min / 60.0) + (lat_sec / 3600.0)
-                longitude = lon_deg + (lon_min / 60.0) + (lon_sec / 3600.0)
+                if latitude is not None and longitude is not None:
+                    # Apply hemisphere reference
+                    if str(tags['GPS GPSLatitudeRef']) == 'S':
+                        latitude = -latitude
+                    if str(tags['GPS GPSLongitudeRef']) == 'W':
+                        longitude = -longitude
 
-                # Apply hemisphere reference
-                if str(tags['GPS GPSLatitudeRef']) == 'S':
-                    latitude = -latitude
-                if str(tags['GPS GPSLongitudeRef']) == 'W':
-                    longitude = -longitude
+                    result['latitude'] = latitude
+                    result['longitude'] = longitude
+                else:
+                    result['gps_available'] = False
+                    result['gps_error'] = "Could not parse GPS coordinates"
 
-                result['latitude'] = latitude
-                result['longitude'] = longitude
+            except Exception as gps_error:
+                result['gps_available'] = False
+                result['gps_error'] = f"GPS parsing error: {str(gps_error)}"
 
         return result
 
@@ -107,9 +130,6 @@ def get_location_address(lat, lon):
         str: Human-readable address
     """
     try:
-        from geopy.geocoders import Nominatim
-        from geopy.exc import GeocoderTimedOut, GeocoderServiceError
-
         geolocator = Nominatim(user_agent="osint-tracker")
         location = geolocator.reverse(f"{lat}, {lon}", timeout=10)
 
@@ -137,8 +157,6 @@ def generate_map(lat, lon):
         folium.Map: Interactive map object
     """
     try:
-        import folium
-
         # Create map centered on the location
         m = folium.Map(location=[lat, lon], zoom_start=15)
 
@@ -282,38 +300,20 @@ def analyze_pdf_authenticity(pdf_file):
             'classification': 'UNKNOWN'
         }
 
-        # Check for digital signatures (simplified approach)
+        # Check for digital signatures (basic approach)
         try:
             signatures = []
-            for page_num in range(len(pdf_reader.pages)):
-                page = pdf_reader.pages[page_num]
-                # Check for signature fields in AcroForm
-                if '/Annots' in page:
-                    try:
-                        annotations = page['/Annots']
-                        # Handle both direct arrays and indirect references
-                        if hasattr(annotations, 'get_object'):
-                            annotations = annotations.get_object()
-
-                        # If annotations is a list/array
-                        if isinstance(annotations, list):
-                            for annot_ref in annotations:
-                                try:
-                                    if hasattr(annot_ref, 'get_object'):
-                                        annot = annot_ref.get_object()
-                                    else:
-                                        annot = annot_ref
-
-                                    # Check if this is a signature widget
-                                    if isinstance(annot, dict):
-                                        subtype = annot.get('/Subtype')
-                                        ft = annot.get('/FT')
-                                        if subtype == '/Widget' and ft == '/Sig':
-                                            signatures.append(f"Signature field on page {page_num + 1}")
-                                except:
-                                    continue
-                    except:
-                        pass
+            # Check if PDF has AcroForm (forms) which might contain signatures
+            if hasattr(pdf_reader, 'get_form_text_fields') or '/AcroForm' in pdf_reader.trailer.get('/Root', {}):
+                # Try to get form fields
+                try:
+                    form_fields = pdf_reader.get_form_text_fields()
+                    if form_fields:
+                        for field_name, field_value in form_fields.items():
+                            if 'sig' in field_name.lower() or 'signature' in field_name.lower():
+                                signatures.append(f"Signature field: {field_name}")
+                except:
+                    pass
 
             result['digital_signatures'] = signatures
         except Exception as e:
